@@ -21,7 +21,14 @@ type BaseInfo struct {
 type Tems struct {
 	BaseInfo
 	Articles []model.Article
-	Tags     []string
+	Tags     []Tag
+}
+
+// Tag is structure for tag
+type Tag struct {
+	ID    int
+	Count int
+	Name  string
 }
 
 // GenerateFromTemplate generates static site from template.
@@ -92,7 +99,9 @@ func executeArticle(art model.Article, htmlDir string, templateDir string, outDi
 	}
 	art.HTML = string(bytes)
 	var f *os.File
-	f, err = os.Create(path.Join(outDir, art.Filename+".html"))
+	os.Mkdir(path.Join(outDir, art.Filename), 0755)
+
+	f, err = os.Create(path.Join(outDir, art.Filename, "index.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -105,16 +114,17 @@ func executeArticle(art model.Article, htmlDir string, templateDir string, outDi
 	return true
 }
 
-func getTagsFromArticles(arts []model.Article) []string {
-	m := make(map[string]bool, len(arts))
+func getTagsFromArticles(arts []model.Article) []Tag {
+	m := make(map[string]int, len(arts))
 	for _, a := range arts {
 		for _, t := range a.Tags {
-			m[t] = true
+			m[t]++
 		}
 	}
-	tags := make([]string, 0, len(arts))
-	for k := range m {
-		tags = append(tags, k)
+	tags := make([]Tag, 0, len(arts))
+	id := 0
+	for tag, count := range m {
+		tags = append(tags, Tag{ID: id, Count: count, Name: tag})
 	}
 	return tags
 }
