@@ -4,15 +4,24 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"text/template"
 
 	"github.com/wirekang/blogen/model"
 )
 
-func TestCheckTemplateFiles(t *testing.T) {
+func TestTemplate(t *testing.T) {
 	os.Chdir("..")
-	if !checkTemplateFiles("example/templates") {
-		t.FailNow()
+	tems := Tems{}
+	tems.Addr = "localhost"
+	tems.Title = "Title of tems"
+	tems.Tags = []string{"Tag1", "태그2", "ㅁㄴㅇㄹ"}
+	tem := template.New("base.html")
+	var err error
+	tem, err = tem.ParseGlob("example/templates/*.html")
+	if err != nil {
+		fmt.Println(err)
 	}
+	tem.Execute(os.Stdout, tems)
 }
 
 func TestGetTags(t *testing.T) {

@@ -4,36 +4,56 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"text/template"
 
 	"github.com/wirekang/blogen/fl"
 	"github.com/wirekang/blogen/model"
 )
 
-// TemplateFiles is files that should exists in template directory
-var TemplateFiles = []string{"base.html", "main.html", "item.html", "single.html"}
-
-// GenerateFromTemplate generates static site from template.
-func GenerateFromTemplate(arts []model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
-	fmt.Println("Generating...")
-	if !checkTemplateFiles(templateDir) {
-		return false
-	}
-	if !fl.IsExists(outDir) {
-		os.Mkdir(outDir, 0644)
-	}
-
-	tags := getTagsFromArticles(arts)
-
-	return true
+// BaseInfo is base information of site
+type BaseInfo struct {
+	Title string
+	Addr  string
 }
 
-func checkTemplateFiles(templateDir string) (ok bool) {
-	for _, file := range TemplateFiles {
-		if !fl.IsExists(path.Join(templateDir, file)) {
-			return false
-		}
+// Tems is structure for template
+type Tems struct {
+	BaseInfo
+	Articles []model.Article
+	Tags     []string
+}
+
+// GenerateFromTemplate generates static site from template.
+func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
+	fmt.Println("Generating...")
+	if !fl.IsExists(outDir) {
+		os.Mkdir(outDir, 0755)
+	}
+	tems := Tems{}
+	tems.Title = bi.Title
+	tems.Addr = bi.Addr
+	tems.Articles = arts
+	tems.Tags = getTagsFromArticles(arts)
+	tem := template.New("base.html")
+	var err error
+	tem, err = tem.ParseGlob(path.Join(templateDir, "*.html"))
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	var f *os.File
+	f, err = os.Create(path.Join(outDir, "index.html"))
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	err = tem.Execute(f, tems)
+	if err != nil {
+		fmt.Println(err)
+		return false
 	}
 	return true
+
 }
 
 func getTagsFromArticles(arts []model.Article) []string {

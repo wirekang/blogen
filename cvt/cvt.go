@@ -35,7 +35,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 	}
 
 	if !fl.IsExists(dstDir) {
-		os.Mkdir(dstDir, 0644)
+		os.Mkdir(dstDir, 0755)
 	}
 
 	articles := make([]model.Article, 0, len(infos))
