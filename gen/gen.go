@@ -43,6 +43,7 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 	tems.Addr = bi.Addr
 	tems.Articles = arts
 	tems.Tags = getTagsFromArticles(arts)
+
 	ok = executeIndex(tems, templateDir, outDir)
 
 	if !ok {
@@ -57,8 +58,51 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 			fmt.Println("Ok")
 		}
 	}
+
+	for _, tag := range tems.Tags {
+		fmt.Printf("Tag %s...  ", tag.Name)
+		ok := executeTag(tems, tag, templateDir, outDir)
+		if ok {
+			fmt.Println("Ok")
+		}
+	}
 	return true
 
+}
+
+func executeTag(tems Tems, tag Tag, templateDir string, outDir string) (ok bool) {
+	tem := template.New("index.html")
+	var err error
+	tem, err = tem.ParseGlob(path.Join(templateDir, "index", "*.html"))
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	dir := fmt.Sprintf("tag%d", tag.ID)
+	os.Mkdir(path.Join(outDir, dir), 0755)
+	var f *os.File
+	f, err = os.Create(path.Join(outDir, dir, "index.html"))
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	newArt := make([]model.Article, 0)
+	for _, art := range tems.Articles {
+	TagLoop:
+		for _, t := range art.Tags {
+			if t == tag.Name {
+				newArt = append(newArt, art)
+				break TagLoop
+			}
+		}
+	}
+	tems.Articles = newArt
+	err = tem.Execute(f, tems)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
 }
 
 func executeIndex(tems Tems, templateDir string, outDir string) (ok bool) {
@@ -125,6 +169,7 @@ func getTagsFromArticles(arts []model.Article) []Tag {
 	id := 0
 	for tag, count := range m {
 		tags = append(tags, Tag{ID: id, Count: count, Name: tag})
+		id++
 	}
 	return tags
 }
