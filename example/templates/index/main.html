@@ -1,9 +1,0 @@
-{{ define "Content"}}
-<div id="main">
-    {{ range .Articles }}
-        {{ template "Item" . }}
-    {{ end }}
-
-    tags: {{ range .Tags }} {{ . }} {{ end}}
-</div>
-{{ end }}

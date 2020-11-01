@@ -73,7 +73,7 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 func executeTag(tems Tems, tag Tag, templateDir string, outDir string) (ok bool) {
 	tem := template.New("index.html")
 	var err error
-	tem, err = tem.ParseGlob(path.Join(templateDir, "index", "*.html"))
+	tem, err = tem.ParseFiles(path.Join(templateDir, "index.html"), path.Join(templateDir, "list.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -107,8 +107,12 @@ func executeTag(tems Tems, tag Tag, templateDir string, outDir string) (ok bool)
 
 func executeIndex(tems Tems, templateDir string, outDir string) (ok bool) {
 	tem := template.New("index.html")
+	files := []string{
+		path.Join(templateDir, "index.html"),
+		path.Join(templateDir, "list.html"),
+	}
 	var err error
-	tem, err = tem.ParseGlob(path.Join(templateDir, "index", "*.html"))
+	tem, err = tem.ParseFiles(files...)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -128,9 +132,9 @@ func executeIndex(tems Tems, templateDir string, outDir string) (ok bool) {
 }
 
 func executeArticle(art model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
-	tem := template.New("article.html")
+	tem := template.New("index.html")
 	var err error
-	tem, err = tem.ParseFiles(path.Join(templateDir, "article.html"))
+	tem, err = tem.ParseFiles(path.Join(templateDir, "index.html"), path.Join(templateDir, "article.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
