@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 // Article contains basic information of one article
 type Article struct {
@@ -8,4 +10,5 @@ type Article struct {
 	Title    string
 	Tags     []string
 	Date     time.Time
+	HTML     string
 }

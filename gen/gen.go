@@ -2,6 +2,7 @@ package gen
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"text/template"
@@ -35,7 +36,8 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 	tems.Addr = bi.Addr
 	tems.Articles = arts
 	tems.Tags = getTagsFromArticles(arts)
-	ok = executeFiles(tems, templateDir, "index", outDir)
+	ok = executeIndex(tems, templateDir, outDir)
+
 	if !ok {
 		fmt.Println("index.html failed.")
 		return false
@@ -43,7 +45,7 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 
 	for _, art := range arts {
 		fmt.Printf("%s...  ", art.Filename)
-		ok = executeSingleFile(art, path.Join(templateDir, "single", "single.html"), path.Join(outDir, art.Filename+".html"))
+		ok = executeArticle(art, htmlDir, templateDir, outDir)
 		if ok {
 			fmt.Println("Ok")
 		}
@@ -52,21 +54,21 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 
 }
 
-func executeFiles(data interface{}, templateDir string, name string, outDir string) (ok bool) {
-	tem := template.New(name + ".html")
+func executeIndex(tems Tems, templateDir string, outDir string) (ok bool) {
+	tem := template.New("index.html")
 	var err error
-	tem, err = tem.ParseGlob(path.Join(templateDir, name, "*.html"))
+	tem, err = tem.ParseGlob(path.Join(templateDir, "index", "*.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 	var f *os.File
-	f, err = os.Create(path.Join(outDir, name+".html"))
+	f, err = os.Create(path.Join(outDir, "index.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
-	err = tem.Execute(f, data)
+	err = tem.Execute(f, tems)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -74,21 +76,28 @@ func executeFiles(data interface{}, templateDir string, name string, outDir stri
 	return true
 }
 
-func executeSingleFile(data interface{}, from string, to string) (ok bool) {
-	tem := template.New(path.Base(from))
+func executeArticle(art model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
+	tem := template.New("article.html")
 	var err error
-	tem, err = tem.ParseFiles(from)
+	tem, err = tem.ParseFiles(path.Join(templateDir, "article.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
+	var bytes []byte
+	bytes, err = ioutil.ReadFile(path.Join(htmlDir, art.Filename))
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	art.HTML = string(bytes)
 	var f *os.File
-	f, err = os.Create(to)
+	f, err = os.Create(path.Join(outDir, art.Filename+".html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
-	err = tem.Execute(f, data)
+	err = tem.Execute(f, art)
 	if err != nil {
 		fmt.Println(err)
 		return false

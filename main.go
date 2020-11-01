@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
 	"os"
 
 	"github.com/wirekang/blogen/cvt"
@@ -10,18 +11,24 @@ import (
 
 func main() {
 	meta := flag.Bool("meta", false, "print meta")
-	mds := flag.String("mds", "mds", "source directory")
-	temp := flag.String("temp", "templates", "templates directory")
-	out := flag.String("out", "out", "output directory")
+	mdsDir := flag.String("mds", "mds", "source directory")
+	templatesDir := flag.String("temp", "templates", "templates directory")
+	outDir := flag.String("out", "out", "output directory")
 	flag.Parse()
 
 	if *meta {
-		println("title: 제목\ntags: 태그1, 태그2, 태그3\ndate: 2020-8-12\n##blogen##\n")
+		println("title: Title of Article\ntags: tag1, tag2, tag3\ndate: 2020-8-12\n##blogen##\n")
 		os.Exit(0)
 	}
+	tmp, err := ioutil.TempDir(".", "tmp")
+	if err != nil {
+		println(err)
+		os.Exit(1)
+	}
+	defer os.RemoveAll(tmp)
 
-	arts := cvt.ConvertFiles(*mds, "htmls", "##blogen##", "-")
-	ok := gen.GenerateFromTemplate(gen.BaseInfo{Title: "wirekang 블로그", Addr: "localhost"}, arts, "htmls", *temp, *out)
+	arts := cvt.ConvertFiles(*mdsDir, tmp, "##blogen##", "-")
+	ok := gen.GenerateFromTemplate(gen.BaseInfo{Title: "wirekang 블로그", Addr: "localhost"}, arts, tmp, *templatesDir, *outDir)
 	if !ok {
 		println("Failed.")
 		os.Exit(1)

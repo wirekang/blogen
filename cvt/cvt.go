@@ -17,7 +17,7 @@ import (
 )
 
 // ConvertFiles read markdown files from directory src and parse them to html.
-// The result will be written to directory dest.
+// The result will be written to directory dst.
 //
 // Written articles are returned.
 func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) []model.Article {
@@ -48,7 +48,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 		}
 		filename := strings.Split(info.Name(), ".")[0]
 		fmt.Printf("%s ... ", filename)
-		ok, art := convertFile(path.Join(srcDir, info.Name()), path.Join(dstDir, filename+".html"), metaSep, dateSep)
+		ok, art := convertFile(path.Join(srcDir, info.Name()), path.Join(dstDir, filename), metaSep, dateSep)
 		if !ok {
 			continue
 		}
