@@ -126,6 +126,7 @@ func metaToArticle(meta string, dateSep string) (ok bool, ar model.Article) {
 				continue
 			}
 			result.Date = t
+			result.StringDate = t.Format("2006-01-02")
 		}
 	}
 	return true, result
