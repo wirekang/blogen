@@ -29,6 +29,7 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 	if !fl.IsExists(outDir) {
 		os.Mkdir(outDir, 0755)
 	}
+	arts = sortArticlesByDate(arts)
 	tems := Tems{}
 	tems.Title = bi.Title
 	tems.Addr = bi.Addr
@@ -68,4 +69,18 @@ func getTagsFromArticles(arts []model.Article) []string {
 		tags = append(tags, k)
 	}
 	return tags
+}
+
+func sortArticlesByDate(arts []model.Article) []model.Article {
+	var tmp model.Article
+	for i := len(arts) - 1; i > 0; i-- {
+		for j := 0; j < i; j++ {
+			if arts[j].Date.Unix() < arts[j+1].Date.Unix() {
+				tmp = arts[j]
+				arts[j] = arts[j+1]
+				arts[j+1] = tmp
+			}
+		}
+	}
+	return arts
 }
