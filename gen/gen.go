@@ -35,16 +35,24 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 	tems.Addr = bi.Addr
 	tems.Articles = arts
 	tems.Tags = getTagsFromArticles(arts)
-	ok = executeSingle(tems, templateDir, "index", outDir)
+	ok = executeFiles(tems, templateDir, "index", outDir)
 	if !ok {
 		fmt.Println("index.html failed.")
 		return false
+	}
+
+	for _, art := range arts {
+		fmt.Printf("%s...  ", art.Filename)
+		ok = executeSingleFile(art, path.Join(templateDir, "single", "single.html"), path.Join(outDir, art.Filename+".html"))
+		if ok {
+			fmt.Println("Ok")
+		}
 	}
 	return true
 
 }
 
-func executeSingle(data interface{}, templateDir string, name string, outDir string) (ok bool) {
+func executeFiles(data interface{}, templateDir string, name string, outDir string) (ok bool) {
 	tem := template.New(name + ".html")
 	var err error
 	tem, err = tem.ParseGlob(path.Join(templateDir, name, "*.html"))
@@ -54,6 +62,28 @@ func executeSingle(data interface{}, templateDir string, name string, outDir str
 	}
 	var f *os.File
 	f, err = os.Create(path.Join(outDir, name+".html"))
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	err = tem.Execute(f, data)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
+}
+
+func executeSingleFile(data interface{}, from string, to string) (ok bool) {
+	tem := template.New(path.Base(from))
+	var err error
+	tem, err = tem.ParseFiles(from)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	var f *os.File
+	f, err = os.Create(to)
 	if err != nil {
 		fmt.Println(err)
 		return false

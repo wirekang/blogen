@@ -10,7 +10,9 @@ import (
 
 func main() {
 	meta := flag.Bool("meta", false, "print meta")
-	src := flag.String("src", "", "source directory")
+	mds := flag.String("mds", "mds", "source directory")
+	temp := flag.String("temp", "templates", "templates directory")
+	out := flag.String("out", "out", "output directory")
 	flag.Parse()
 
 	if *meta {
@@ -18,12 +20,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	if *src == "" {
-		println("Empty src")
-		os.Exit(1)
-	}
-	arts := cvt.ConvertFiles(*src, "htmls", "##blogen##", "-")
-	ok := gen.GenerateFromTemplate(gen.BaseInfo{Title: "wirekang 블로그", Addr: "localhost"}, arts, "htmls", "templates", "out")
+	arts := cvt.ConvertFiles(*mds, "htmls", "##blogen##", "-")
+	ok := gen.GenerateFromTemplate(gen.BaseInfo{Title: "wirekang 블로그", Addr: "localhost"}, arts, "htmls", *temp, *out)
 	if !ok {
 		println("Failed.")
 		os.Exit(1)
