@@ -27,6 +27,7 @@ func main() {
 	}
 	defer os.RemoveAll(tmp)
 
+	os.RemoveAll(*outDir)
 	arts := cvt.ConvertFiles(*mdsDir, tmp, "##blogen##", "-")
 	ok := gen.GenerateFromTemplate(gen.BaseInfo{Title: "wirekang 블로그", Addr: "localhost"}, arts, tmp, *templatesDir, *outDir)
 	if !ok {
