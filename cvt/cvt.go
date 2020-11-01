@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"regexp"
 	"strconv"
@@ -30,6 +31,11 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 	if err != nil {
 		fmt.Println(err)
 		return nil
+	}
+
+	_, err = os.Stat(dstDir)
+	if os.IsNotExist(err) {
+		os.Mkdir(dstDir, 0644)
 	}
 
 	articles := make([]model.Article, 0, len(infos))
