@@ -35,26 +35,35 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 	tems.Addr = bi.Addr
 	tems.Articles = arts
 	tems.Tags = getTagsFromArticles(arts)
-	tem := template.New("base.html")
+	ok = executeSingle(tems, templateDir, "index", outDir)
+	if !ok {
+		fmt.Println("index.html failed.")
+		return false
+	}
+	return true
+
+}
+
+func executeSingle(data interface{}, templateDir string, name string, outDir string) (ok bool) {
+	tem := template.New(name + ".html")
 	var err error
-	tem, err = tem.ParseGlob(path.Join(templateDir, "*.html"))
+	tem, err = tem.ParseGlob(path.Join(templateDir, name, "*.html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 	var f *os.File
-	f, err = os.Create(path.Join(outDir, "index.html"))
+	f, err = os.Create(path.Join(outDir, name+".html"))
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
-	err = tem.Execute(f, tems)
+	err = tem.Execute(f, data)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 	return true
-
 }
 
 func getTagsFromArticles(arts []model.Article) []string {
