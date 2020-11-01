@@ -52,6 +52,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 		if !ok {
 			continue
 		}
+		fmt.Println("Ok")
 		art.Filename = filename
 		articles = append(articles, art)
 	}
@@ -73,9 +74,14 @@ func convertFile(src string, dst string, metaSep string, dateSep string) (ok boo
 	ok, article = metaToArticle(meta, dateSep)
 	if !ok {
 		fmt.Println("Parsing meta failed.")
+		return
 	}
 	html := parseMarkdown(md)
-	ioutil.WriteFile(dst, html, 0644)
+	err = ioutil.WriteFile(dst, html, 0644)
+	if err != nil {
+		fmt.Println(err)
+		return false, article
+	}
 	return true, article
 }
 
