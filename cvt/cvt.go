@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gomarkdown/markdown"
+	"github.com/wirekang/blogen/fl"
 	"github.com/wirekang/blogen/model"
 )
 
@@ -33,8 +34,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 		return nil
 	}
 
-	_, err = os.Stat(dstDir)
-	if os.IsNotExist(err) {
+	if !fl.IsExists(dstDir) {
 		os.Mkdir(dstDir, 0644)
 	}
 
