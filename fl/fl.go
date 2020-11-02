@@ -1,3 +1,4 @@
+// Package fl serves uitl functions about files.
 package fl
 
 import "os"

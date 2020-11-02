@@ -1,3 +1,4 @@
+//Package gen generates sites.
 package gen
 
 import (

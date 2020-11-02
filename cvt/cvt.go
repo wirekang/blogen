@@ -1,3 +1,4 @@
+// Package cvt converts markdown files to html.
 package cvt
 
 import (
