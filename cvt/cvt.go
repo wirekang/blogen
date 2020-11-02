@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path"
 	"regexp"
 	"strconv"
@@ -34,8 +33,10 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 		return nil
 	}
 
-	if !fl.IsExist(dstDir) {
-		os.Mkdir(dstDir, 0755)
+	err = fl.MakeIfNotExist(dstDir)
+	if err != nil {
+		fmt.Println(err)
+		return nil
 	}
 
 	articles := make([]model.Article, 0, len(infos))
