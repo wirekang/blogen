@@ -15,3 +15,11 @@ func MakeIfNotExist(path string) error {
 	}
 	return nil
 }
+
+// CreateIfNotExist creates file if it doesn't exist.
+func CreateIfNotExist(name string) (*os.File, error) {
+	if !IsExist(name) {
+		return os.Create(name)
+	}
+	return nil, nil
+}
