@@ -34,7 +34,7 @@ type Tag struct {
 // GenerateFromTemplate generates static site from template.
 func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
 	fmt.Println("Generating...")
-	if !fl.IsExists(outDir) {
+	if !fl.IsExist(outDir) {
 		os.Mkdir(outDir, 0755)
 	}
 	arts = sortArticlesByDate(arts)

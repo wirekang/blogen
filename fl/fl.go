@@ -2,15 +2,15 @@ package fl
 
 import "os"
 
-// IsExists returns true if file exist.
-func IsExists(path string) bool {
+// IsExist returns true if file exist.
+func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	return !os.IsNotExist(err)
 }
 
-// MakeIfNotExists makes directory if it doesn't exist.
-func MakeIfNotExists(path string) error {
-	if !IsExists(path) {
+// MakeIfNotExist makes directory if it doesn't exist.
+func MakeIfNotExist(path string) error {
+	if !IsExist(path) {
 		return os.MkdirAll(path, 0755)
 	}
 	return nil

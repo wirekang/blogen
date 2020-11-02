@@ -34,7 +34,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 		return nil
 	}
 
-	if !fl.IsExists(dstDir) {
+	if !fl.IsExist(dstDir) {
 		os.Mkdir(dstDir, 0755)
 	}
 
