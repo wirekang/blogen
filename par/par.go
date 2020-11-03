@@ -1,3 +1,4 @@
+//Package par parses things.
 package par
 
 import (
