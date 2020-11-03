@@ -7,9 +7,10 @@ import (
 	"os"
 	"path"
 	"text/template"
+	"time"
 
+	"github.com/wirekang/blogen/cvt"
 	"github.com/wirekang/blogen/fl"
-	"github.com/wirekang/blogen/model"
 )
 
 // BaseInfo is base information of site
@@ -21,7 +22,7 @@ type BaseInfo struct {
 // Tems is structure for template
 type Tems struct {
 	BaseInfo
-	Articles []model.Article
+	Articles []Article
 	Tags     []Tag
 }
 
@@ -32,20 +33,32 @@ type Tag struct {
 	Name  string
 }
 
+// Article is structure for article
+type Article struct {
+	Filename   string
+	Title      string
+	Tags       []Tag
+	Date       time.Time
+	StringDate string
+	HTML       string
+}
+
 // GenerateFromTemplate generates static site from template.
-func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
+func GenerateFromTemplate(bi BaseInfo, cArts []cvt.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
 	fmt.Println("Generating...")
 	err := fl.MakeIfNotExist(outDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
+	tags := getTagsFromCvtArticles(cArts)
+	arts := convertArticle(cArts, tags)
 	arts = sortArticlesByDate(arts)
 	tems := Tems{}
 	tems.Title = bi.Title
 	tems.Addr = bi.Addr
 	tems.Articles = arts
-	tems.Tags = getTagsFromArticles(arts)
+	tems.Tags = tags
 
 	ok = executeIndex(tems, templateDir, outDir)
 
@@ -73,6 +86,22 @@ func GenerateFromTemplate(bi BaseInfo, arts []model.Article, htmlDir string, tem
 
 }
 
+func convertArticle(cArts []cvt.Article, tags []Tag) []Article {
+	arts := make([]Article, len(cArts))
+	for i, ca := range cArts {
+		for 
+		for _, tag := range tags {
+			
+			arts[i] = Article{
+				Filename: ca.Filename,
+				Title:    ca.Title,
+				Date:     ca.Date,
+			}
+		}
+	}
+	return arts
+}
+
 func executeTag(tems Tems, tag Tag, templateDir string, outDir string) (ok bool) {
 	tem := template.New("index.html")
 	var err error
@@ -89,7 +118,7 @@ func executeTag(tems Tems, tag Tag, templateDir string, outDir string) (ok bool)
 		fmt.Println(err)
 		return false
 	}
-	newArt := make([]model.Article, 0)
+	newArt := make([]Article, 0)
 	for _, art := range tems.Articles {
 	TagLoop:
 		for _, t := range art.Tags {
@@ -134,7 +163,7 @@ func executeIndex(tems Tems, templateDir string, outDir string) (ok bool) {
 	return true
 }
 
-func executeArticle(art model.Article, htmlDir string, templateDir string, outDir string) (ok bool) {
+func executeArticle(art Article, htmlDir string, templateDir string, outDir string) (ok bool) {
 	tem := template.New("index.html")
 	var err error
 	tem, err = tem.ParseFiles(path.Join(templateDir, "index.html"), path.Join(templateDir, "article.html"))
@@ -165,7 +194,7 @@ func executeArticle(art model.Article, htmlDir string, templateDir string, outDi
 	return true
 }
 
-func getTagsFromArticles(arts []model.Article) []Tag {
+func getTagsFromCvtArticles(arts []cvt.Article) []Tag {
 	m := make(map[string]int, len(arts))
 	for _, a := range arts {
 		for _, t := range a.Tags {
@@ -181,8 +210,8 @@ func getTagsFromArticles(arts []model.Article) []Tag {
 	return tags
 }
 
-func sortArticlesByDate(arts []model.Article) []model.Article {
-	var tmp model.Article
+func sortArticlesByDate(arts []Article) []Article {
+	var tmp Article
 	for i := len(arts) - 1; i > 0; i-- {
 		for j := 0; j < i; j++ {
 			if arts[j].Date.Unix() < arts[j+1].Date.Unix() {

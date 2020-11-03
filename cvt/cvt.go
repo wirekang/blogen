@@ -13,14 +13,21 @@ import (
 
 	"github.com/gomarkdown/markdown"
 	"github.com/wirekang/blogen/fl"
-	"github.com/wirekang/blogen/model"
 )
+
+// Article is structure for article
+type Article struct {
+	Filename string
+	Title    string
+	Tags     []string
+	Date     time.Time
+}
 
 // ConvertFiles read markdown files from directory src and parse them to html.
 // The result will be written to directory dst.
 //
 // Written articles are returned.
-func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) []model.Article {
+func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) []Article {
 	infos, err := ioutil.ReadDir(srcDir)
 	if err != nil {
 		fmt.Println(err)
@@ -40,7 +47,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 		return nil
 	}
 
-	articles := make([]model.Article, 0, len(infos))
+	articles := make([]Article, 0, len(infos))
 	for _, info := range infos {
 		if info.IsDir() {
 			continue
@@ -61,7 +68,7 @@ func ConvertFiles(srcDir string, dstDir string, metaSep string, dateSep string) 
 	return articles
 }
 
-func convertFile(src string, dst string, metaSep string, dateSep string) (ok bool, art model.Article) {
+func convertFile(src string, dst string, metaSep string, dateSep string) (ok bool, art Article) {
 	bytes, err := ioutil.ReadFile(src)
 	if err != nil {
 		fmt.Println("Reading file failed.")
@@ -72,7 +79,7 @@ func convertFile(src string, dst string, metaSep string, dateSep string) (ok boo
 		fmt.Println("Seperating meta failed.")
 		return
 	}
-	var article model.Article
+	var article Article
 	ok, article = metaToArticle(meta, dateSep)
 	if !ok {
 		fmt.Println("Parsing meta failed.")
@@ -95,9 +102,9 @@ func seperateMeta(str string, metaSep string) (ok bool, meta string, md string) 
 	return true, a[0], a[1]
 }
 
-func metaToArticle(meta string, dateSep string) (ok bool, ar model.Article) {
+func metaToArticle(meta string, dateSep string) (ok bool, ar Article) {
 	lines := strings.Split(meta, "\n")
-	result := model.Article{}
+	result := Article{}
 	if len(lines) < 3 {
 		return false, result
 	}
@@ -128,7 +135,6 @@ func metaToArticle(meta string, dateSep string) (ok bool, ar model.Article) {
 				continue
 			}
 			result.Date = t
-			result.StringDate = t.Format("2006-01-02")
 		}
 	}
 	return true, result
