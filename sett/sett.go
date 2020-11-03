@@ -19,8 +19,6 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
-
-	"github.com/wirekang/blogen/er"
 )
 
 // Setting contains key and parsable value
@@ -76,8 +74,8 @@ func ParseSettings(str string) (Settings, error) {
 // ParseSettingsFromFile calls ParseSettings
 func ParseSettingsFromFile(file string) ([]Setting, error) {
 	bytes, err := ioutil.ReadFile(file)
-	if er.PrintIfNotNil(err) {
-		return nil, nil
+	if err != nil {
+		return nil, err
 	}
 	return ParseSettings(string(bytes))
 }

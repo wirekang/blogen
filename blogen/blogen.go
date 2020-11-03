@@ -6,7 +6,6 @@ import (
 	"path"
 	"time"
 
-	"github.com/wirekang/blogen/er"
 	"github.com/wirekang/blogen/fl"
 )
 
@@ -42,10 +41,7 @@ func CheckDirs() bool {
 	for _, d := range necessaryDirs {
 		if !fl.IsExist(d) {
 			ok = false
-			err := os.MkdirAll(d, 0755)
-			if er.PrintIfNotNil(err) {
-				continue
-			}
+			os.MkdirAll(d, 0755)
 		}
 	}
 	return ok
@@ -64,10 +60,7 @@ func CheckFiles() bool {
 	for _, f := range necessaryFiles {
 		if !fl.IsExist(f) {
 			ok = false
-			f, err := os.Create(f)
-			if er.PrintIfNotNil(err) {
-				continue
-			}
+			f, _ := os.Create(f)
 			f.Close()
 		}
 	}

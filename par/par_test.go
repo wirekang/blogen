@@ -3,15 +3,13 @@ package par
 import (
 	"fmt"
 	"testing"
-
-	"github.com/wirekang/blogen/er"
 )
 
 func TestExtract(t *testing.T) {
 	str := []byte("key1: val1\nkey2: val2\n$\n# this is markdown")
 	set, md, err := Extract(str, '#')
-	if er.PrintIfNotNil(err) {
-		t.FailNow()
+	if err != nil {
+		t.Fatal(err)
 	}
 	fmt.Printf("==%s==\n==%s==\n", set, md)
 }

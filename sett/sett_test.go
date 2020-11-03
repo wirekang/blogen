@@ -2,8 +2,6 @@ package sett
 
 import (
 	"testing"
-
-	"github.com/wirekang/blogen/er"
 )
 
 func TestSett(t *testing.T) {
@@ -13,13 +11,13 @@ func TestSett(t *testing.T) {
 		"4key  :false\n" +
 		"#Key5:true\n"
 	ss, err := ParseSettings(str)
-	if er.PrintIfNotNil(err) {
-		t.FailNow()
+	if err != nil {
+		t.Fatal(err)
 	}
 	find := func(key string) Setting {
 		s, err := ss.Find(key)
-		if er.PrintIfNotNil(err) {
-			t.FailNow()
+		if err != nil {
+			t.Fatal(err)
 		}
 		return s
 	}
@@ -35,16 +33,16 @@ func TestSett(t *testing.T) {
 	if key1.StringValue() != "value1" {
 		t.FailNow()
 	}
-	if i, err := key2.IntValue(); i != 32 || er.PrintIfNotNil(err) {
-		t.FailNow()
+	if i, err := key2.IntValue(); i != 32 || err != nil {
+		t.Fatal(err)
 	}
 
 	ar := key3.StringArrayValue()
 	if ar[0] != "one" || ar[1] != "two" || ar[2] != "three" {
 		t.FailNow()
 	}
-	if b, err := key4.BoolValue(); b || er.PrintIfNotNil(err) {
-		t.FailNow()
+	if b, err := key4.BoolValue(); b || err != nil {
+		t.Fatal(err)
 	}
 
 }

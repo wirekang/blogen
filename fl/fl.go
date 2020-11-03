@@ -5,8 +5,6 @@ import (
 	"crypto/md5"
 	"io"
 	"os"
-
-	"github.com/wirekang/blogen/er"
 )
 
 // IsExist returns true if file exist.
@@ -35,7 +33,7 @@ func CreateIfNotExist(name string) (*os.File, error) {
 func Checksum(file string) ([]byte, error) {
 	hasher := md5.New()
 	f, err := os.Open(file)
-	if er.PrintIfNotNil(err) {
+	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
