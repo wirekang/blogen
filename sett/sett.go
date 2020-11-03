@@ -64,6 +64,7 @@ func ParseSettings(str string) (Settings, error) {
 		if value == "" {
 			return nil, fmt.Errorf("\"%s\" is not value", value)
 		}
+		key = strings.ToLower(key)
 		settings = append(settings, Setting{key: key, value: value})
 	}
 	return settings, nil
