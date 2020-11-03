@@ -108,3 +108,25 @@ func (s Setting) StringArrayValue() []string {
 	}
 	return re
 }
+
+// MakePlaceholder returns setting format string with empty values.
+//
+// - - -
+//
+// key1:
+//
+// key2:
+//
+// key3:
+func MakePlaceholder(keys []string) string {
+	str := ""
+	for _, key := range keys {
+		str += key + ": \n"
+	}
+	return str
+}
+
+// MakePlaceholderFile calls MakePlaceholder and writes result to file.
+func MakePlaceholderFile(file string, keys []string) error {
+	return ioutil.WriteFile(file, []byte(MakePlaceholder(keys)), 0755)
+}
