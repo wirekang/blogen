@@ -1,6 +1,6 @@
 //Package sett parses the following format:
 //
-// ------------------------------
+// - - -
 //
 // key: string value
 //
@@ -11,8 +11,6 @@
 // key: string, array, value
 //
 // #comment
-//
-// ------------------------------
 package sett
 
 import (
