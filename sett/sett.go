@@ -10,6 +10,8 @@
 //
 // key: string, array, value
 //
+// #comment
+//
 // ------------------------------
 package sett
 
@@ -49,6 +51,9 @@ func ParseSettings(str string) (Settings, error) {
 	settings := make([]Setting, 0, len(lines))
 	for _, line := range lines {
 		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		if line[0] == '#' {
 			continue
 		}
 		kv := strings.Split(line, ":")

@@ -11,7 +11,7 @@ func TestSett(t *testing.T) {
 		"key2 : 32\n \n\n\t\n" +
 		"Key_3: one, two , three\n\n \n" +
 		"4key  :false\n" +
-		"Key5:true\n"
+		"#Key5:true\n"
 	ss, err := ParseSettings(str)
 	if er.PrintIfNotNil(err) {
 		t.FailNow()
@@ -27,7 +27,10 @@ func TestSett(t *testing.T) {
 	key2 := find("key2")
 	key3 := find("key_3")
 	key4 := find("4key")
-	key5 := find("key5")
+	_, err = ss.Find("#key5")
+	if err == nil {
+		t.FailNow()
+	}
 
 	if key1.StringValue() != "value1" {
 		t.FailNow()
@@ -43,7 +46,5 @@ func TestSett(t *testing.T) {
 	if b, err := key4.BoolValue(); b || er.PrintIfNotNil(err) {
 		t.FailNow()
 	}
-	if b, err := key5.BoolValue(); !b || er.PrintIfNotNil(err) {
-		t.FailNow()
-	}
+
 }
