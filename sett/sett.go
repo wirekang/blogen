@@ -14,6 +14,7 @@
 package sett
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"strconv"
@@ -28,8 +29,22 @@ type Setting struct {
 	value string
 }
 
+// Settings is array of Setting.
+// you can find a Setting by Find(key) function.
+type Settings []Setting
+
+// Find returns a Setting with matching key.
+func (ss Settings) Find(key string) (Setting, error) {
+	for _, s := range ss {
+		if s.key == key {
+			return s, nil
+		}
+	}
+	return Setting{}, errors.New("no match key")
+}
+
 // ParseSettings parses Settings from string
-func ParseSettings(str string) ([]Setting, error) {
+func ParseSettings(str string) (Settings, error) {
 	lines := strings.Split(str, "\n")
 	settings := make([]Setting, 0, len(lines))
 	for _, line := range lines {
