@@ -37,6 +37,10 @@ const templateListFile = "list.html"
 const templateSingleFile = "single.html"
 const templateStyleFile = "style.css"
 
+const cacheDir = "cache"
+const outDir = "out"
+const genDir = "gen"
+
 // CheckDirs returns true if all necessary directories exist.
 // If a directory doesn't exist, an empty directory is created.
 func CheckDirs() bool {
