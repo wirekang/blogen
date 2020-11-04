@@ -37,7 +37,7 @@ const templateListFile = "list.html"
 const templateSingleFile = "single.html"
 const templateStyleFile = "style.css"
 
-const cacheDir = "cache"
+const checksumDir = "cache"
 const outDir = "out"
 const genDir = "gen"
 
@@ -94,5 +94,5 @@ func pathOfMarkdown(aid string) string {
 }
 
 func pathOfChecksum(aid string) string {
-	return path.Join(cacheDir, aid)
+	return path.Join(checksumDir, aid)
 }
