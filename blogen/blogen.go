@@ -89,10 +89,12 @@ func IsModified(aid string) (bool, error) {
 
 }
 
+// PathOfMarkdown returns md/{aid}.md
 func PathOfMarkdown(aid string) string {
 	return path.Join(mdDir, aid+".md")
 }
 
+// PathOfChecksum returns cache/{aid}
 func PathOfChecksum(aid string) string {
 	return path.Join(checksumDir, aid)
 }
