@@ -77,11 +77,11 @@ func CheckFiles() bool {
 
 // IsModified returns true if given article file differs from the cached checksum.
 func IsModified(aid string) (bool, error) {
-	ch, err := ioutil.ReadFile(pathOfChecksum(aid))
+	ch, err := ioutil.ReadFile(PathOfChecksum(aid))
 	if err != nil {
 		return true, nil
 	}
-	md, err := ioutil.ReadFile(pathOfMarkdown(aid))
+	md, err := ioutil.ReadFile(PathOfMarkdown(aid))
 	if err != nil {
 		return true, err
 	}
@@ -89,10 +89,10 @@ func IsModified(aid string) (bool, error) {
 
 }
 
-func pathOfMarkdown(aid string) string {
+func PathOfMarkdown(aid string) string {
 	return path.Join(mdDir, aid+".md")
 }
 
-func pathOfChecksum(aid string) string {
+func PathOfChecksum(aid string) string {
 	return path.Join(checksumDir, aid)
 }
