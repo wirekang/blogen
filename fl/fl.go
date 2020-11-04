@@ -2,8 +2,6 @@
 package fl
 
 import (
-	"crypto/md5"
-	"io"
 	"os"
 )
 
@@ -27,16 +25,4 @@ func CreateIfNotExist(name string) (*os.File, error) {
 		return os.Create(name)
 	}
 	return nil, nil
-}
-
-// Checksum returns hash of file.
-func Checksum(file string) ([]byte, error) {
-	hasher := md5.New()
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	_, err = io.Copy(hasher, f)
-	return hasher.Sum(nil), err
 }
