@@ -87,7 +87,7 @@ func Checksum(b []byte) ([]byte, error) {
 }
 
 // IsModified returns true if given md bytes are newer than saved.
-func IsModified(md []byte) (bool, error) {
+func IsModified(aid string, md []byte) (bool, error) {
 	saved, err := ioutil.ReadFile(PathOfChecksum(aid))
 	if err != nil {
 		return true, nil
