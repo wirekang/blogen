@@ -110,6 +110,11 @@ func PathOfChecksum(aid string) string {
 	return path.Join(checksumDir, aid)
 }
 
+// PathOfHTML returns gen/{aid}
+func PathOfHTML(aid string) string {
+	return path.Join(genDir, aid)
+}
+
 // ListMarkdowns returns array of markdown files.
 func ListMarkdowns() ([]string, error) {
 	return filepath.Glob(path.Join(mdDir, "*.md"))
