@@ -9,12 +9,14 @@ import (
 	"github.com/wirekang/blogen/fl"
 )
 
+// Tag is keyword for article.
 type Tag struct {
 	ID    int
 	Name  string
 	Count int
 }
 
+// Article is a piece of writing.
 type Article struct {
 	ID    string
 	Title string
