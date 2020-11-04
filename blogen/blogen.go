@@ -16,7 +16,7 @@ type Tag struct {
 }
 
 type Article struct {
-	Name  string
+	ID    string
 	Title string
 	Time  time.Time
 	Date  string
