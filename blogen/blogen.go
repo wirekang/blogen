@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/wirekang/blogen/fl"
@@ -107,4 +108,9 @@ func PathOfMarkdown(aid string) string {
 // PathOfChecksum returns cache/{aid}
 func PathOfChecksum(aid string) string {
 	return path.Join(checksumDir, aid)
+}
+
+// ListMarkdowns returns array of markdown files.
+func ListMarkdowns() ([]string, error) {
+	return filepath.Glob(path.Join(mdDir, "*.md"))
 }
