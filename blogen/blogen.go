@@ -3,6 +3,7 @@ package blogen
 
 import (
 	"bytes"
+	"crypto/md5"
 	"io/ioutil"
 	"os"
 	"path"
@@ -75,18 +76,27 @@ func CheckFiles() bool {
 	return ok
 }
 
-// IsModified returns true if given article file differs from the cached checksum.
-func IsModified(aid string) (bool, error) {
-	ch, err := ioutil.ReadFile(PathOfChecksum(aid))
+// Checksum returns md5 hash of given bytes.
+func Checksum(b []byte) ([]byte, error) {
+	hasher := md5.New()
+	_, err := hasher.Write(b)
+	if err != nil {
+		return nil, err
+	}
+	return hasher.Sum(nil), nil
+}
+
+// IsModified returns true if given md bytes are newer than saved.
+func IsModified(md []byte) (bool, error) {
+	saved, err := ioutil.ReadFile(PathOfChecksum(aid))
 	if err != nil {
 		return true, nil
 	}
-	md, err := ioutil.ReadFile(PathOfMarkdown(aid))
+	sum, err := Checksum(md)
 	if err != nil {
 		return true, err
 	}
-	return !bytes.Equal(ch, md), nil
-
+	return !bytes.Equal(saved, sum), nil
 }
 
 // PathOfMarkdown returns md/{aid}.md
