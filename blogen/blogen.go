@@ -2,6 +2,8 @@
 package blogen
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
 	"path"
 	"time"
@@ -67,4 +69,28 @@ func CheckFiles() bool {
 		}
 	}
 	return ok
+}
+
+// IsModified returns true if given article file differs from the cached checksum.
+func IsModified(aid string) (bool, error) {
+	ch, err := ReadChecksum(aid)
+	if err != nil {
+		return true, nil
+	}
+	md, err := ReadMarkdown(aid)
+	if err != nil {
+		return true, err
+	}
+	return !bytes.Equal(ch, md), nil
+
+}
+
+// ReadMarkdown reads all bytes from given article.
+func ReadMarkdown(aid string) ([]byte, error) {
+	return ioutil.ReadFile(path.Join(srcDir, aid+".md"))
+}
+
+// ReadChecksum reads all bytes from given article.
+func ReadChecksum(aid string) ([]byte, error) {
+	return ioutil.ReadFile(path.Join(cacheDir, aid))
 }
