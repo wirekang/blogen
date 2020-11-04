@@ -29,7 +29,7 @@ type Article struct {
 }
 
 const settingsFile = "settings.txt"
-const srcDir = "src"
+const mdDir = "md"
 const templateDir = "template"
 const templateBaseFile = "base.html"
 const templateMainFile = "main.html"
@@ -44,7 +44,7 @@ const genDir = "gen"
 // CheckDirs returns true if all necessary directories exist.
 // If a directory doesn't exist, an empty directory is created.
 func CheckDirs() bool {
-	necessaryDirs := []string{srcDir, templateDir}
+	necessaryDirs := []string{mdDir, templateDir}
 	ok := true
 	for _, d := range necessaryDirs {
 		if !fl.IsExist(d) {
@@ -90,7 +90,7 @@ func IsModified(aid string) (bool, error) {
 }
 
 func pathOfMarkdown(aid string) string {
-	return path.Join(srcDir, aid+".md")
+	return path.Join(mdDir, aid+".md")
 }
 
 func pathOfChecksum(aid string) string {
