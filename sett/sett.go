@@ -19,6 +19,8 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/wirekang/errutil"
 )
 
 // Setting contains key and parsable value
@@ -38,6 +40,7 @@ func (ss Settings) Find(key string) (Setting, error) {
 			return s, nil
 		}
 	}
+	errutil.NewErrorStack(nil)
 	return Setting{}, errors.New("no match key")
 }
 
