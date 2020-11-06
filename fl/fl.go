@@ -71,12 +71,9 @@ func IsNecessaryDirsExist() bool {
 	return true
 }
 
-// MakeNecessaryDirs makes all necessary directories.
-func MakeNecessaryDirs() error {
+// MakeDirs makes all directories.
+func MakeDirs() error {
 	for _, dir := range dirs {
-		if !dir.isNecessary {
-			continue
-		}
 		err := fileutil.MakeIfNotExist(dir.path)
 		if err != nil {
 			return err

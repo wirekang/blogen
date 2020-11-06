@@ -14,7 +14,7 @@ func Test(t *testing.T) {
 	if IsFilesExist() {
 		t.FailNow()
 	}
-	err := MakeNecessaryDirs()
+	err := MakeDirs()
 	if err != nil {
 		t.Fatal(err)
 	}
