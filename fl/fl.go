@@ -22,8 +22,8 @@ var dirs = make([]directory, 0)
 var files = make([]file, 0)
 
 var root = directory{"", false}
-var configFile = newFile(root, "blogen.config",
-	"title: Title of blog\naddr: //example.com")
+var configFile = newFile(root, "blogen.cfg",
+	"title= Title of blog\naddr= //example.com")
 
 var mdDir = newDirectory(root, "md", true)
 
