@@ -8,6 +8,8 @@ github.com/wirekang/cfg v0.0.0-20201107033617-8c78cc02a23f h1:gAUi36FS1vudKtFWnp
 github.com/wirekang/cfg v0.0.0-20201107033617-8c78cc02a23f/go.mod h1:D1TYA1f6mCjNLUSuCYZSHvUucpIXOMzwERWiCsoHw/Q=
 github.com/wirekang/errutil v0.0.0-20201104133657-e2f465345b19 h1:q32Ofv+uJb5B7CetSSAWhz4ogtrL/IKweMvfbY3aEEc=
 github.com/wirekang/errutil v0.0.0-20201104133657-e2f465345b19/go.mod h1:BYcVp4O0ILMtMoqhzN2CPIN2x8cW8pJS4+FiVuc3edI=
+github.com/wirekang/errutil v0.0.0-20201107040724-1ffedb733927 h1:ejuLNMMEqqDHbXtwyMxlH1E+sKdzp+J76Yw7WYJHMis=
+github.com/wirekang/errutil v0.0.0-20201107040724-1ffedb733927/go.mod h1:BYcVp4O0ILMtMoqhzN2CPIN2x8cW8pJS4+FiVuc3edI=
 github.com/wirekang/fileutil v0.0.0-20201104135253-bbf9567a22b9 h1:JkpTQGgdAx07IjRwka/Hz0WEauxISjmKYDOKpc8FHCY=
 github.com/wirekang/fileutil v0.0.0-20201104135253-bbf9567a22b9/go.mod h1:7CZodhggRI+sgtRAxfIP1xLYoU2BQayh1u6mj1WrMoM=
 golang.org/dl v0.0.0-20190829154251-82a15e2f2ead/go.mod h1:IUMfjQLJQd4UTqG1Z90tenwKoCX93Gn3MAQJMOSBsDQ=
