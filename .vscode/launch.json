@@ -8,10 +8,18 @@
             "name": "Launch",
             "type": "go",
             "request": "launch",
-            "mode": "auto",
+            "mode": "debug",
+            "program": "${workspaceFolder}/main.go",
+            "args": ["-src=debug-src"]
+        },
+        {
+            "name": "Launch -i",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
             "program": "${workspaceFolder}/main.go",
             "env": {},
-            "args": []
+            "args": ["-src=debug-src","-i"]
         }
     ]
 }
