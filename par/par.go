@@ -3,6 +3,7 @@ package par
 
 import (
 	"errors"
+	"io/ioutil"
 	"time"
 
 	"github.com/gomarkdown/markdown"
@@ -10,7 +11,11 @@ import (
 
 // Extract extracts config and markdown bytes from src.
 // Config and markdown are separated by sep.
-func Extract(src []byte, sep byte) (config []byte, markdown []byte, err error) {
+func Extract(file string, sep byte) (config []byte, markdown []byte, err error) {
+	src, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, nil, err
+	}
 	for i, b := range src {
 		if b == sep {
 			config = src[:i]
