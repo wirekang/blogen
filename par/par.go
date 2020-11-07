@@ -8,12 +8,12 @@ import (
 	"github.com/gomarkdown/markdown"
 )
 
-// Extract extracts settings and markdown bytes from src.
-// Settings and markdown are separated by sep.
-func Extract(src []byte, sep byte) (settings []byte, markdown []byte, err error) {
+// Extract extracts config and markdown bytes from src.
+// Config and markdown are separated by sep.
+func Extract(src []byte, sep byte) (config []byte, markdown []byte, err error) {
 	for i, b := range src {
 		if b == sep {
-			settings = src[:i]
+			config = src[:i]
 			markdown = src[i+1:]
 			return
 		}
