@@ -2,6 +2,7 @@
 package fl
 
 import (
+	"os"
 	"path"
 
 	"github.com/wirekang/fileutil"
@@ -95,7 +96,10 @@ func IsFilesExist() bool {
 // CreateExampleFiles creates all files with example content.
 func CreateExampleFiles() error {
 	for _, file := range files {
-		f, err := fileutil.CreateIfNotExist(file.path)
+		if fileutil.IsExist(file.path) {
+			continue
+		}
+		f, err := os.Create(file.path)
 		if err != nil {
 			return err
 		}
