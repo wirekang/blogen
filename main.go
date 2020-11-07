@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/wirekang/blogen/fl"
+	"github.com/wirekang/cfg"
 )
 
 func main() {
@@ -24,12 +25,12 @@ func main() {
 	if *init {
 		err := fl.MakeDirs()
 		if err != nil {
-			fmt.Printf("dir: %s", err)
+			fmt.Printf("Can't make dirs: %s", err)
 			os.Exit(1)
 		}
 		err = fl.CreateExampleFiles()
 		if err != nil {
-			fmt.Printf("files: %s", err)
+			fmt.Printf("Can't create files: %s", err)
 			os.Exit(1)
 		}
 		fmt.Println("Done")
@@ -39,5 +40,16 @@ func main() {
 		fmt.Println("Can't find necessary files. Add -i option for initialization.")
 		os.Exit(1)
 	}
+	con, err := cfg.LoadFile(fl.Config())
+	if err != nil {
+		fmt.Printf("Can't load %s: %s\n", fl.Config(), err)
+		os.Exit(1)
+	}
+	if !con.IsExist("title") || !con.IsExist("addr") {
+		fmt.Printf("Can't find necessary config.")
+		os.Exit(1)
+	}
+	title := con.Find("title").String()
+	addr := con.Find("addr").String()
 
 }
