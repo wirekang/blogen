@@ -10,6 +10,8 @@ github.com/wirekang/errutil v0.0.0-20201104133657-e2f465345b19 h1:q32Ofv+uJb5B7C
 github.com/wirekang/errutil v0.0.0-20201104133657-e2f465345b19/go.mod h1:BYcVp4O0ILMtMoqhzN2CPIN2x8cW8pJS4+FiVuc3edI=
 github.com/wirekang/errutil v0.0.0-20201107040724-1ffedb733927 h1:ejuLNMMEqqDHbXtwyMxlH1E+sKdzp+J76Yw7WYJHMis=
 github.com/wirekang/errutil v0.0.0-20201107040724-1ffedb733927/go.mod h1:BYcVp4O0ILMtMoqhzN2CPIN2x8cW8pJS4+FiVuc3edI=
+github.com/wirekang/errutil v0.0.0-20201110112253-5208b74fda9e h1:XRjpzYjAChCeuAHjipty+WM31fiJwyU6EZ5FTHYo+wQ=
+github.com/wirekang/errutil v0.0.0-20201110112253-5208b74fda9e/go.mod h1:BYcVp4O0ILMtMoqhzN2CPIN2x8cW8pJS4+FiVuc3edI=
 github.com/wirekang/fileutil v0.0.0-20201104135253-bbf9567a22b9 h1:JkpTQGgdAx07IjRwka/Hz0WEauxISjmKYDOKpc8FHCY=
 github.com/wirekang/fileutil v0.0.0-20201104135253-bbf9567a22b9/go.mod h1:7CZodhggRI+sgtRAxfIP1xLYoU2BQayh1u6mj1WrMoM=
 github.com/wirekang/todo v0.0.0-20201107042137-f8843c5b6062 h1:JHAfMScI5bSueZOGYlk5J924L3EDv1qGy0VeuezFRWg=
