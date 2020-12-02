@@ -4,8 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path"
+	"path/filepath"
 
 	"github.com/wirekang/blogen/fl"
+	"github.com/wirekang/blogen/gen"
 	"github.com/wirekang/cfg"
 )
 
@@ -51,5 +54,21 @@ func main() {
 	}
 	title := con.Find("title").String()
 	addr := con.Find("addr").String()
+	fmt.Printf("Start generating.\ntitle=%s\naddr=%s\n", title, addr)
 
+	mds, err := filepath.Glob(path.Join(fl.MarkdownDir(), "*.md"))
+	if err != nil {
+		fmt.Printf("Can't read files in %s: %s", fl.MarkdownDir(), err)
+		os.Exit(1)
+	}
+	for _, md := range mds {
+		fmt.Printf("%s... ", md)
+		err = gen.ParseMD(md, fl.HashDir(), fl.HTMLDir())
+		if err != nil {
+			fmt.Printf("Fail: %s", err)
+			continue
+		}
+		fmt.Println("Success.")
+
+	}
 }
