@@ -1,3 +1,5 @@
+github.com/gomarkdown/markdown v0.0.0-20201113031856-722100d81a8e h1:/Y3B7hM9H3TOWPhe8eWGBGS4r09pjvS5Z0uoPADyjmU=
+github.com/gomarkdown/markdown v0.0.0-20201113031856-722100d81a8e/go.mod h1:aii0r/K0ZnHv7G0KF7xy1v0A7s2Ljrb5byB7MO5p6TU=
 github.com/wirekang/cfg v0.0.0-20201107050501-a4d40fbd9684 h1:tj9i1e2JtleeW7RiE/ahcgJb61wu3h8MZVPFgRkiswA=
 github.com/wirekang/cfg v0.0.0-20201107050501-a4d40fbd9684/go.mod h1:D1TYA1f6mCjNLUSuCYZSHvUucpIXOMzwERWiCsoHw/Q=
 github.com/wirekang/errutil v0.0.0-20201110112253-5208b74fda9e h1:XRjpzYjAChCeuAHjipty+WM31fiJwyU6EZ5FTHYo+wQ=
@@ -6,3 +8,4 @@ github.com/wirekang/errutil v0.0.0-20201110114100-911db42bdbfd h1:ShkZ+8aLs41NuZ
 github.com/wirekang/errutil v0.0.0-20201110114100-911db42bdbfd/go.mod h1:BYcVp4O0ILMtMoqhzN2CPIN2x8cW8pJS4+FiVuc3edI=
 github.com/wirekang/fileutil v0.0.0-20201107050621-8b613ef58766 h1:USYdzWl2hvzeUgytellfzH35CNW4IoUWqhdJOF1eEdc=
 github.com/wirekang/fileutil v0.0.0-20201107050621-8b613ef58766/go.mod h1:7CZodhggRI+sgtRAxfIP1xLYoU2BQayh1u6mj1WrMoM=
+golang.org/dl v0.0.0-20190829154251-82a15e2f2ead/go.mod h1:IUMfjQLJQd4UTqG1Z90tenwKoCX93Gn3MAQJMOSBsDQ=
