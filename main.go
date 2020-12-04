@@ -10,6 +10,7 @@ import (
 	"github.com/wirekang/blogen/fl"
 	"github.com/wirekang/blogen/gen"
 	"github.com/wirekang/cfg"
+	"github.com/wirekang/errutil"
 )
 
 func main() {
@@ -33,6 +34,8 @@ func main() {
 			fmt.Printf("Can't clear cache: %s", err)
 			os.Exit(1)
 		}
+		err = os.Mkdir(fl.HashDir(), 0755)
+		errutil.Print(err)
 		fmt.Println("Chache cleared.")
 		os.Exit(0)
 	}
