@@ -88,4 +88,9 @@ func main() {
 		fmt.Println("Success.")
 
 	}
+
+	err = gen.Generate(title, addr, fl.TemplateDir(), fl.HTMLDir(), fl.OutDir())
+	if err != nil {
+		fmt.Println(err)
+	}
 }

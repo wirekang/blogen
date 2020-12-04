@@ -29,10 +29,10 @@ var mdDir = newDirectory(root, "md", true)
 
 var templateDir = newDirectory(root, "template", true)
 var baseFile = newFile(templateDir, "base.html",
-	"<html></html>")
-var mainFile = newFile(templateDir, "main.html", "<div></div>")
-var listFile = newFile(templateDir, "list.html", "<div></div>")
-var singleFile = newFile(templateDir, "single.html", "<div></div>")
+	"<html><head><title>{{ .Title }}</title></head><body>base{{ template \"body\" }}</body></html>")
+var mainFile = newFile(templateDir, "main.html", "{{ define \"body\" }}<div>main{{ template \"list\" }}</div>{{ end }}")
+var listFile = newFile(templateDir, "list.html", "{{ define \"list\" }} <div>list</div>{{ end }}")
+var singleFile = newFile(templateDir, "single.html", "{{ define \"single\" }}<div>single</div>{{ end }}")
 var styleFile = newFile(templateDir, "style.css", "h1 {\n\n}")
 
 var outDir = newDirectory(root, "out", false)

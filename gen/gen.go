@@ -5,7 +5,9 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"html/template"
 	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 	"time"
@@ -40,6 +42,31 @@ type Tag struct {
 	ID    int
 	Name  string
 	Count int
+}
+
+// Generate generates static files.
+func Generate(title string, addr string, templateDir string, htmlDir string, outDir string) error {
+	templateBase := TemplateBase{
+		Title:    title,
+		Addr:     addr,
+		Articles: articles,
+		Tags:     tags,
+	}
+	tem, err := template.ParseFiles(path.Join(templateDir, "base.html"), path.Join(templateDir, "main.html"), path.Join(templateDir, "list.html"),
+		path.Join(templateDir, "style.css"))
+	if err != nil {
+		return err
+	}
+	fIndex, err := os.Create(path.Join(outDir, "index.html"))
+	if err != nil {
+		return err
+	}
+	err = tem.ExecuteTemplate(fIndex, "base.html", templateBase)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ParseMD get tags from md file and write html file to htmlDir.
