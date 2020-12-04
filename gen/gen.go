@@ -25,11 +25,8 @@ var (
 type Article struct {
 	ID    string
 	Title string
-	Tags  string
-	Date  string
+	Tags  []string
 	Time  time.Time
-	MD    string
-	HTML  string
 }
 
 type Tag struct {
@@ -57,20 +54,25 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 		return es.First()
 	}
 
+	aid, err := getID(filename)
+	if err != nil {
+		return err
+	}
+
 	err = parseTag(config.Find("tags").StringArray())
 	es.Push(err)
 
-	aid, err := getID(filename)
-	es.Push(err)
+	article, err := parseArticle(config)
+	if err != nil {
+		return err
+	}
+	article.ID = aid
+	article.Tags = config.Find("tags").StringArray()
+	articles = append(articles, article)
 
 	if isHashed(aid, mdString, hashDir) {
-		return es.First()
+		return nil
 	}
-
-	if es.First() != nil {
-		return es.First()
-	}
-	es.Clear()
 
 	err = writeHash(aid, mdString, hashDir)
 	es.Push(err)
@@ -79,6 +81,18 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 	es.Push(err)
 
 	return es.First()
+}
+
+// parseArticle parses title, date from config to Article.
+func parseArticle(con cfg.Config) (Article, error) {
+	var err error
+	article := Article{}
+	article.Title = con.Find("title").String()
+	article.Time, err = con.Find("date").Date()
+	if err != nil {
+		return article, err
+	}
+	return article, err
 }
 
 // split splits string by Sep.
@@ -166,4 +180,14 @@ func writeHTML(aid string, md string, htmlDir string) error {
 	file := path.Join(htmlDir, aid)
 	err := ioutil.WriteFile(file, markdown.ToHTML([]byte(md), nil, nil), 0755)
 	return err
+}
+
+// getTagID returns tag id.
+func getTagID(tag string) (int, error) {
+	for _, t := range tags {
+		if t.Name == tag {
+			return t.ID, nil
+		}
+	}
+	return 0, fmt.Errorf("no tag %s", tag)
 }
