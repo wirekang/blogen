@@ -14,6 +14,7 @@ import (
 
 func main() {
 	init := flag.Bool("i", false, "initialization")
+	clear := flag.Bool("clear", false, "clear cache")
 	src := flag.String("src", "", "source directory")
 
 	flag.Parse()
@@ -25,6 +26,17 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
+	if *clear {
+		err := os.RemoveAll(fl.HashDir())
+		if err != nil {
+			fmt.Printf("Can't clear cache: %s", err)
+			os.Exit(1)
+		}
+		fmt.Println("Chache cleared.")
+		os.Exit(0)
+	}
+
 	if *init {
 		err := fl.MakeDirs()
 		if err != nil {
