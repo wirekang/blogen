@@ -77,7 +77,7 @@ func main() {
 		fmt.Printf("%s... ", md)
 		err = gen.ParseMD(md, fl.HashDir(), fl.HTMLDir())
 		if err != nil {
-			fmt.Printf("Fail: %s", err)
+			fmt.Printf("Fail: %s\n", err)
 			continue
 		}
 		fmt.Println("Success.")
