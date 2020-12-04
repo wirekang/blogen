@@ -70,7 +70,8 @@ func main() {
 	}
 	title := con.Find("title").String()
 	addr := con.Find("addr").String()
-	fmt.Printf("Start generating.\ntitle=%s\naddr=%s\n", title, addr)
+	wd, _ := os.Getwd()
+	fmt.Printf("Start generating: %s \ntitle=%s\naddr=%s\n", wd, title, addr)
 
 	mds, err := filepath.Glob(path.Join(fl.MarkdownDir(), "*.md"))
 	if err != nil {
