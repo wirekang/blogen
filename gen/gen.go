@@ -22,6 +22,13 @@ var (
 	tags     []Tag
 )
 
+type TemplateBase struct {
+	Title    string
+	Addr     string
+	Articles []Article
+	Tags     []Tag
+}
+
 type Article struct {
 	ID    string
 	Title string
