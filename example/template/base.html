@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="KR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>{{ template "style" . }}</style>
+    <title>{{ .Title }}</title>
+</head>
+<body>
+    <h1><a href="index.html">{{ .Title }}</a></h1>
+    {{ if .InList }}
+        <div class="tag">
+            <h4>Tags</h4>
+            {{ range .Tags }}
+                <a href="tag{{ .ID }}.html">{{ .Name }}({{ .Count }})</a>
+            {{ end }}
+        </div>
+    {{ end }}
+    {{ template "body" .}}
+</body>
+</html>

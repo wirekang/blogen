@@ -1,0 +1,11 @@
+{{ define "style" }}
+div.tag{
+    background-color: aqua;
+}
+div.main{
+    background-color: #bbb;
+}
+div.list{
+    background-color: #ddd;
+}
+{{ end }}

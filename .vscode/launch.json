@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
-            "args": ["-src=debug-src"]
+            "args": ["-src=example"]
         },
         {
             "name": "Launch -i",
@@ -19,7 +19,7 @@
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
             "env": {},
-            "args": ["-src=debug-src","-i"]
+            "args": ["-src=example","-i"]
         }
     ]
 }

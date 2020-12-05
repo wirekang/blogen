@@ -1,0 +1,17 @@
+<h1>Code block</h1>
+
+<h2>C</h2>
+
+<pre><code class="language-c">int main(void){
+    printf(&quot;Hello world&quot;);
+    return 0;
+}
+</code></pre>
+
+<h2>Golang</h2>
+
+<pre><code class="language-go">func main(){
+    fmt.Println(&quot;Hello&quot;)
+    os.Exit(0)
+}
+</code></pre>
