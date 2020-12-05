@@ -20,16 +20,16 @@ import (
 )
 
 var (
-	Sep      = "##blogen##"
-	articles []Article
-	tags     []Tag
+	Sep   = "##blogen##"
+	posts []Post
+	tags  []Tag
 )
 
 type TemplateBase struct {
-	Title    string
-	Addr     string
-	Articles []Article
-	Tags     []Tag
+	Title string
+	Addr  string
+	Posts []Post
+	Tags  []Tag
 
 	//list
 	InList       bool
@@ -37,13 +37,13 @@ type TemplateBase struct {
 	FilteredTags []Tag
 
 	//single
-	InSingle        bool
-	Article         Article
-	HTML            template.HTML
-	RelatedArticles []Article
+	InSingle     bool
+	Post         Post
+	HTML         template.HTML
+	RelatedPosts []Post
 }
 
-type Article struct {
+type Post struct {
 	ID    string
 	Title string
 	Tags  []Tag
@@ -58,8 +58,8 @@ type Tag struct {
 
 // Generate generates static files.
 func Generate(title string, addr string, templateDir string, htmlDir string, outDir string) error {
-	sort.Slice(articles, func(i, j int) bool {
-		return articles[i].Time.After(articles[j].Time)
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].Time.After(posts[j].Time)
 	})
 
 	tem, err := template.ParseFiles(path.Join(templateDir, "base.html"),
@@ -85,8 +85,8 @@ func Generate(title string, addr string, templateDir string, htmlDir string, out
 		return err
 	}
 
-	for _, art := range articles {
-		err = generateSingle(title, addr, tem, outDir, htmlDir, art)
+	for _, post := range posts {
+		err = generateSingle(title, addr, tem, outDir, htmlDir, post)
 		es.Push(err)
 	}
 	return es.First()
@@ -103,15 +103,15 @@ func generateList(title string, addr string, tem *template.Template, file string
 	}
 
 	if filteredTags == nil {
-		templateBase.Articles = articles
+		templateBase.Posts = posts
 	} else {
 
-		arts := make([]Article, 0)
-		for _, art := range articles {
+		psts := make([]Post, 0)
+		for _, pst := range posts {
 			contain := false
 		Loop:
 			for _, ft := range filteredTags {
-				for _, t := range art.Tags {
+				for _, t := range pst.Tags {
 					if ft.ID == t.ID {
 						contain = true
 						break Loop
@@ -119,10 +119,10 @@ func generateList(title string, addr string, tem *template.Template, file string
 				}
 			}
 			if contain {
-				arts = append(arts, art)
+				psts = append(psts, pst)
 			}
 		}
-		templateBase.Articles = arts
+		templateBase.Posts = psts
 	}
 	wr, err := os.Create(file)
 	if err != nil {
@@ -131,12 +131,12 @@ func generateList(title string, addr string, tem *template.Template, file string
 	return tem.Execute(wr, templateBase)
 }
 
-func generateSingle(title string, addr string, tem *template.Template, outDir string, htmlDir string, article Article) error {
-	wr, err := os.Create(path.Join(outDir, fmt.Sprintf("%s.html", article.ID)))
+func generateSingle(title string, addr string, tem *template.Template, outDir string, htmlDir string, post Post) error {
+	wr, err := os.Create(path.Join(outDir, fmt.Sprintf("%s.html", post.ID)))
 	if err != nil {
 		return err
 	}
-	html, err := ioutil.ReadFile(path.Join(htmlDir, article.ID))
+	html, err := ioutil.ReadFile(path.Join(htmlDir, post.ID))
 	if err != nil {
 		return err
 	}
@@ -145,23 +145,23 @@ func generateSingle(title string, addr string, tem *template.Template, outDir st
 		Title:    title,
 		Addr:     addr,
 		Tags:     tags,
-		Article:  article,
+		Post:     post,
 		InSingle: true,
 		HTML:     template.HTML(html),
 	}
-	rel := make([]Article, 0)
-	for _, art := range articles {
+	rel := make([]Post, 0)
+	for _, pst := range posts {
 	Loop:
-		for _, t1 := range art.Tags {
-			for _, t2 := range article.Tags {
+		for _, t1 := range pst.Tags {
+			for _, t2 := range post.Tags {
 				if t1.ID == t2.ID {
-					rel = append(rel, art)
+					rel = append(rel, pst)
 					break Loop
 				}
 			}
 		}
 	}
-	templateBase.RelatedArticles = rel
+	templateBase.RelatedPosts = rel
 	return tem.Execute(wr, templateBase)
 }
 
@@ -192,11 +192,11 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 	err = parseTag(config.Find("tags").StringArray())
 	es.Push(err)
 
-	article, err := parseArticle(config)
+	post, err := parsePost(config)
 	if err != nil {
 		return err
 	}
-	article.ID = aid
+	post.ID = aid
 	ts := make([]Tag, 0)
 	for _, t := range config.Find("tags").StringArray() {
 		tag, err := findTag(t)
@@ -205,8 +205,8 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 		}
 		ts = append(ts, tag)
 	}
-	article.Tags = ts
-	articles = append(articles, article)
+	post.Tags = ts
+	posts = append(posts, post)
 
 	if isHashed(aid, mdString, hashDir) {
 		return nil
@@ -221,16 +221,16 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 	return es.First()
 }
 
-// parseArticle parses title, date from config to Article.
-func parseArticle(con cfg.Config) (Article, error) {
+// parsePost parses title, date from config to Post.
+func parsePost(con cfg.Config) (Post, error) {
 	var err error
-	article := Article{}
-	article.Title = con.Find("title").String()
-	article.Time, err = con.Find("date").Date()
+	post := Post{}
+	post.Title = con.Find("title").String()
+	post.Time, err = con.Find("date").Date()
 	if err != nil {
-		return article, err
+		return post, err
 	}
-	return article, err
+	return post, err
 }
 
 // split splits string by Sep.
