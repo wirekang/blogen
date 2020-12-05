@@ -33,9 +33,9 @@ type TemplateBase struct {
 	Tags        []Tag
 
 	//list
-	InList       bool
-	IsFiltered   bool
-	FilteredTags []Tag
+	InList      bool
+	IsFiltered  bool
+	FilteredTag Tag
 
 	//single
 	InSingle     bool
@@ -68,11 +68,11 @@ func Generate(title string, des string, addr string, templateDir string, htmlDir
 	if err != nil {
 		return err
 	}
-	err = generateList(title, des, addr, tem, path.Join(outDir, "index.html"), nil)
+	err = generateList(title, des, addr, tem, path.Join(outDir, "index.html"), Tag{ID: -1})
 	es := errutil.NewErrorStack(err)
 
 	for _, tag := range tags {
-		err = generateList(title, des, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
+		err = generateList(title, des, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), tag)
 		es.Push(err)
 	}
 
@@ -93,35 +93,28 @@ func Generate(title string, des string, addr string, templateDir string, htmlDir
 	return es.First()
 }
 
-func generateList(title string, des string, addr string, tem *template.Template, file string, filteredTags []Tag) error {
+func generateList(title string, des string, addr string, tem *template.Template, file string, filteredTag Tag) error {
 	templateBase := TemplateBase{
-		Title:        title,
-		Description:  des,
-		Addr:         addr,
-		Tags:         tags,
-		InList:       true,
-		IsFiltered:   filteredTags != nil,
-		FilteredTags: filteredTags,
+		Title:       title,
+		Description: des,
+		Addr:        addr,
+		Tags:        tags,
+		InList:      true,
+		IsFiltered:  filteredTag.ID != -1,
+		FilteredTag: filteredTag,
 	}
 
-	if filteredTags == nil {
+	if !templateBase.IsFiltered {
 		templateBase.Posts = posts
 	} else {
 
 		psts := make([]Post, 0)
 		for _, pst := range posts {
-			contain := false
-		Loop:
-			for _, ft := range filteredTags {
-				for _, t := range pst.Tags {
-					if ft.ID == t.ID {
-						contain = true
-						break Loop
-					}
+			for _, t := range pst.Tags {
+				if filteredTag.ID == t.ID {
+					psts = append(psts, pst)
+					break
 				}
-			}
-			if contain {
-				psts = append(psts, pst)
 			}
 		}
 		templateBase.Posts = psts

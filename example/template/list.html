@@ -1,9 +1,6 @@
 {{ define "body" }}
 {{ if .IsFiltered }}
-    <h3>Tag Filter: </h3>
-    {{ range .FilteredTags }}
-        <h4><a href="tag{{ .ID }}.html">{{ .Name }}</a></h4>
-    {{ end }}
+    <h3>Tag: {{ .FilteredTag.Name }}</h3>
 {{ else }}
     <h3>All posts</h3>
 {{ end }}
