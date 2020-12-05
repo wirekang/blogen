@@ -32,10 +32,12 @@ type TemplateBase struct {
 	Tags     []Tag
 
 	//list
+	InList       bool
 	IsFiltered   bool
 	FilteredTags []Tag
 
 	//single
+	InSingle        bool
 	Article         Article
 	HTML            template.HTML
 	RelatedArticles []Article
@@ -95,6 +97,7 @@ func generateFilter(title string, addr string, tem *template.Template, file stri
 		Title:        title,
 		Addr:         addr,
 		Tags:         tags,
+		InList:       true,
 		IsFiltered:   filteredTags != nil,
 		FilteredTags: filteredTags,
 	}
@@ -139,11 +142,12 @@ func generateSingle(title string, addr string, tem *template.Template, outDir st
 	}
 
 	templateBase := TemplateBase{
-		Title:   title,
-		Addr:    addr,
-		Tags:    tags,
-		Article: article,
-		HTML:    template.HTML(html),
+		Title:    title,
+		Addr:     addr,
+		Tags:     tags,
+		Article:  article,
+		InSingle: true,
+		HTML:     template.HTML(html),
 	}
 	rel := make([]Article, 0)
 	for _, art := range articles {
