@@ -155,6 +155,9 @@ func generateSingle(title string, addr string, tem *template.Template, outDir st
 		for _, t1 := range pst.Tags {
 			for _, t2 := range post.Tags {
 				if t1.ID == t2.ID {
+					if pst.ID == post.ID {
+						continue
+					}
 					rel = append(rel, pst)
 					break Loop
 				}
