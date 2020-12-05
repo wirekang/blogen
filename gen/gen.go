@@ -103,7 +103,15 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 		return err
 	}
 	article.ID = aid
-	article.Tags = config.Find("tags").StringArray()
+	ts := make([]Tag, 0)
+	for _, t := range config.Find("tags").StringArray() {
+		tag, err := findTag(t)
+		if err != nil {
+			continue
+		}
+		ts = append(ts, tag)
+	}
+	article.Tags = ts
 	articles = append(articles, article)
 
 	if isHashed(aid, mdString, hashDir) {
