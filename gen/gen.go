@@ -48,27 +48,56 @@ type Tag struct {
 
 // Generate generates static files.
 func Generate(title string, addr string, templateDir string, htmlDir string, outDir string) error {
-	templateBase := TemplateBase{
-		Title:    title,
-		Addr:     addr,
-		Articles: articles,
-		Tags:     tags,
-	}
 	tem, err := template.ParseFiles(path.Join(templateDir, "base.html"), path.Join(templateDir, "main.html"), path.Join(templateDir, "list.html"),
 		path.Join(templateDir, "style.css"))
 	if err != nil {
 		return err
 	}
-	fIndex, err := os.Create(path.Join(outDir, "index.html"))
-	if err != nil {
-		return err
+	err = generateFilter(title, addr, tem, path.Join(outDir, "index.html"), nil)
+	es := errutil.NewErrorStack(err)
+	for _, tag := range tags {
+		err = generateFilter(title, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
+		es.Push(err)
 	}
-	err = tem.ExecuteTemplate(fIndex, "base.html", templateBase)
-	if err != nil {
-		return err
+	return es.First()
+}
+
+func generateFilter(title string, addr string, tem *template.Template, file string, filteredTags []Tag) error {
+	templateBase := TemplateBase{
+		Title:        title,
+		Addr:         addr,
+		Tags:         tags,
+		IsFiltered:   filteredTags != nil,
+		FilteredTags: filteredTags,
 	}
 
-	return nil
+	if filteredTags == nil {
+		templateBase.Articles = articles
+	} else {
+
+		arts := make([]Article, 0)
+		for _, art := range articles {
+			contain := false
+		Loop:
+			for _, ft := range filteredTags {
+				for _, t := range art.Tags {
+					if ft.ID == t.ID {
+						contain = true
+						break Loop
+					}
+				}
+			}
+			if contain {
+				arts = append(arts, art)
+			}
+		}
+		templateBase.Articles = arts
+	}
+	wr, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	return tem.Execute(wr, templateBase)
 }
 
 // ParseMD get tags from md file and write html file to htmlDir.
