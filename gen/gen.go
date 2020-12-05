@@ -49,6 +49,10 @@ type Tag struct {
 
 // Generate generates static files.
 func Generate(title string, addr string, templateDir string, htmlDir string, outDir string) error {
+	sort.Slice(articles, func(i, j int) bool {
+		return articles[i].Time.After(articles[j].Time)
+	})
+
 	tem, err := template.ParseFiles(path.Join(templateDir, "base.html"),
 		path.Join(templateDir, "list.html"), path.Join(templateDir, "style.css"))
 	if err != nil {
@@ -93,9 +97,6 @@ func generateFilter(title string, addr string, tem *template.Template, file stri
 				arts = append(arts, art)
 			}
 		}
-		sort.Slice(arts, func(i, j int) bool {
-			return arts[i].Time.After(arts[j].Time)
-		})
 		templateBase.Articles = arts
 	}
 	wr, err := os.Create(file)
