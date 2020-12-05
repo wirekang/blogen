@@ -30,7 +30,6 @@ func Test(t *testing.T) {
 	}
 	t.Log(Config())
 	t.Log(Base())
-	t.Log(Main())
 	t.Log(List())
 	t.Log(Single())
 	t.Log(Style())
