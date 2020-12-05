@@ -179,6 +179,10 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 	config, err := cfg.Load(configString)
 	es.Push(err)
 
+	if !config.Find("show").Bool() {
+		return errors.New("no show")
+	}
+
 	if !config.IsExist("tags") {
 		es.Push(errors.New("no tags"))
 	}

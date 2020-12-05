@@ -1,6 +1,7 @@
 title = My favorite songs
 date = 2020-11-30
 tags = song, favorite
+show = true
 ##blogen##
 
 # Galway Girl
