@@ -26,10 +26,11 @@ var (
 )
 
 type TemplateBase struct {
-	Title string
-	Addr  string
-	Posts []Post
-	Tags  []Tag
+	Title       string
+	Description string
+	Addr        string
+	Posts       []Post
+	Tags        []Tag
 
 	//list
 	InList       bool
@@ -57,7 +58,7 @@ type Tag struct {
 }
 
 // Generate generates static files.
-func Generate(title string, addr string, templateDir string, htmlDir string, outDir string) error {
+func Generate(title string, des string, addr string, templateDir string, htmlDir string, outDir string) error {
 	sort.Slice(posts, func(i, j int) bool {
 		return posts[i].Time.After(posts[j].Time)
 	})
@@ -67,11 +68,11 @@ func Generate(title string, addr string, templateDir string, htmlDir string, out
 	if err != nil {
 		return err
 	}
-	err = generateList(title, addr, tem, path.Join(outDir, "index.html"), nil)
+	err = generateList(title, des, addr, tem, path.Join(outDir, "index.html"), nil)
 	es := errutil.NewErrorStack(err)
 
 	for _, tag := range tags {
-		err = generateList(title, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
+		err = generateList(title, des, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
 		es.Push(err)
 	}
 
@@ -86,15 +87,16 @@ func Generate(title string, addr string, templateDir string, htmlDir string, out
 	}
 
 	for _, post := range posts {
-		err = generateSingle(title, addr, tem, outDir, htmlDir, post)
+		err = generateSingle(title, des, addr, tem, outDir, htmlDir, post)
 		es.Push(err)
 	}
 	return es.First()
 }
 
-func generateList(title string, addr string, tem *template.Template, file string, filteredTags []Tag) error {
+func generateList(title string, des string, addr string, tem *template.Template, file string, filteredTags []Tag) error {
 	templateBase := TemplateBase{
 		Title:        title,
+		Description:  des,
 		Addr:         addr,
 		Tags:         tags,
 		InList:       true,
@@ -131,7 +133,7 @@ func generateList(title string, addr string, tem *template.Template, file string
 	return tem.Execute(wr, templateBase)
 }
 
-func generateSingle(title string, addr string, tem *template.Template, outDir string, htmlDir string, post Post) error {
+func generateSingle(title string, des string, addr string, tem *template.Template, outDir string, htmlDir string, post Post) error {
 	wr, err := os.Create(path.Join(outDir, fmt.Sprintf("%s.html", post.ID)))
 	if err != nil {
 		return err
@@ -142,12 +144,13 @@ func generateSingle(title string, addr string, tem *template.Template, outDir st
 	}
 
 	templateBase := TemplateBase{
-		Title:    title,
-		Addr:     addr,
-		Tags:     tags,
-		Post:     post,
-		InSingle: true,
-		HTML:     template.HTML(html),
+		Title:       title,
+		Description: des,
+		Addr:        addr,
+		Tags:        tags,
+		Post:        post,
+		InSingle:    true,
+		HTML:        template.HTML(html),
 	}
 	rel := make([]Post, 0)
 	for _, pst := range posts {

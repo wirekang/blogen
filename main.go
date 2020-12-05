@@ -69,6 +69,7 @@ func main() {
 		os.Exit(1)
 	}
 	title := con.Find("title").String()
+	des := con.Find("description").String()
 	addr := con.Find("addr").String()
 	wd, _ := os.Getwd()
 	fmt.Printf("Start generating: %s \ntitle=%s\naddr=%s\n", wd, title, addr)
@@ -89,7 +90,7 @@ func main() {
 
 	}
 
-	err = gen.Generate(title, addr, fl.TemplateDir(), fl.HTMLDir(), fl.OutDir())
+	err = gen.Generate(title, des, addr, fl.TemplateDir(), fl.HTMLDir(), fl.OutDir())
 	if err != nil {
 		fmt.Println(err)
 	}
