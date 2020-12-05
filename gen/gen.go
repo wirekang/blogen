@@ -67,11 +67,11 @@ func Generate(title string, addr string, templateDir string, htmlDir string, out
 	if err != nil {
 		return err
 	}
-	err = generateFilter(title, addr, tem, path.Join(outDir, "index.html"), nil)
+	err = generateList(title, addr, tem, path.Join(outDir, "index.html"), nil)
 	es := errutil.NewErrorStack(err)
 
 	for _, tag := range tags {
-		err = generateFilter(title, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
+		err = generateList(title, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
 		es.Push(err)
 	}
 
@@ -92,7 +92,7 @@ func Generate(title string, addr string, templateDir string, htmlDir string, out
 	return es.First()
 }
 
-func generateFilter(title string, addr string, tem *template.Template, file string, filteredTags []Tag) error {
+func generateList(title string, addr string, tem *template.Template, file string, filteredTags []Tag) error {
 	templateBase := TemplateBase{
 		Title:        title,
 		Addr:         addr,
