@@ -26,12 +26,19 @@ var (
 )
 
 type TemplateBase struct {
-	Title        string
-	Addr         string
-	Articles     []Article
-	Tags         []Tag
+	Title    string
+	Addr     string
+	Articles []Article
+	Tags     []Tag
+
+	//list
 	IsFiltered   bool
 	FilteredTags []Tag
+
+	//single
+	Article         Article
+	HTML            template.HTML
+	RelatedArticles []Article
 }
 
 type Article struct {
@@ -63,6 +70,21 @@ func Generate(title string, addr string, templateDir string, htmlDir string, out
 
 	for _, tag := range tags {
 		err = generateFilter(title, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), []Tag{tag})
+		es.Push(err)
+	}
+
+	if es.First() != nil {
+		return es.First()
+	}
+
+	tem, err = template.ParseFiles(path.Join(templateDir, "base.html"), path.Join(templateDir, "single.html"),
+		path.Join(templateDir, "style.css"))
+	if err != nil {
+		return err
+	}
+
+	for _, art := range articles {
+		err = generateSingle(title, addr, tem, outDir, htmlDir, art)
 		es.Push(err)
 	}
 	return es.First()
@@ -103,6 +125,39 @@ func generateFilter(title string, addr string, tem *template.Template, file stri
 	if err != nil {
 		return err
 	}
+	return tem.Execute(wr, templateBase)
+}
+
+func generateSingle(title string, addr string, tem *template.Template, outDir string, htmlDir string, article Article) error {
+	wr, err := os.Create(path.Join(outDir, fmt.Sprintf("%s.html", article.ID)))
+	if err != nil {
+		return err
+	}
+	html, err := ioutil.ReadFile(path.Join(htmlDir, article.ID))
+	if err != nil {
+		return err
+	}
+
+	templateBase := TemplateBase{
+		Title:   title,
+		Addr:    addr,
+		Tags:    tags,
+		Article: article,
+		HTML:    template.HTML(html),
+	}
+	rel := make([]Article, 0)
+	for _, art := range articles {
+	Loop:
+		for _, t1 := range art.Tags {
+			for _, t2 := range article.Tags {
+				if t1.ID == t2.ID {
+					rel = append(rel, art)
+					break Loop
+				}
+			}
+		}
+	}
+	templateBase.RelatedArticles = rel
 	return tem.Execute(wr, templateBase)
 }
 
