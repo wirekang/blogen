@@ -201,7 +201,7 @@ func parseTag(src []string) error {
 			tags = append(tags, Tag{
 				Name:  strings.TrimSpace(str),
 				ID:    len(tags) + 1,
-				Count: 0,
+				Count: 1,
 			})
 		}
 	}
