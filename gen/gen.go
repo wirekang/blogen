@@ -25,16 +25,18 @@ var (
 )
 
 type TemplateBase struct {
-	Title    string
-	Addr     string
-	Articles []Article
-	Tags     []Tag
+	Title        string
+	Addr         string
+	Articles     []Article
+	Tags         []Tag
+	IsFiltered   bool
+	FilteredTags []Tag
 }
 
 type Article struct {
 	ID    string
 	Title string
-	Tags  []string
+	Tags  []Tag
 	Time  time.Time
 }
 
@@ -216,12 +218,12 @@ func writeHTML(aid string, md string, htmlDir string) error {
 	return err
 }
 
-// getTagID returns tag id.
-func getTagID(tag string) (int, error) {
+// findTag returns tag.
+func findTag(tag string) (Tag, error) {
 	for _, t := range tags {
 		if t.Name == tag {
-			return t.ID, nil
+			return t, nil
 		}
 	}
-	return 0, fmt.Errorf("no tag %s", tag)
+	return Tag{}, fmt.Errorf("no tag %s", tag)
 }
