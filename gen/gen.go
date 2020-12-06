@@ -63,6 +63,10 @@ func Generate(title string, des string, addr string, templateDir string, htmlDir
 		return posts[i].Time.After(posts[j].Time)
 	})
 
+	sort.Slice(tags, func(i, j int) bool {
+		return tags[i].Count > tags[j].Count
+	})
+
 	tem, err := template.ParseFiles(path.Join(templateDir, "base.html"),
 		path.Join(templateDir, "list.html"), path.Join(templateDir, "style.css"))
 	if err != nil {
