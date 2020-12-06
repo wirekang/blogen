@@ -20,9 +20,9 @@ import (
 )
 
 var (
-	Sep   = "##blogen##"
-	posts []Post
-	tags  []Tag
+	Sep      = "##blogen##"
+	allPosts []Post
+	allTags  []Tag
 )
 
 type TemplateBase struct {
@@ -59,12 +59,12 @@ type Tag struct {
 
 // Generate generates static files.
 func Generate(title string, des string, addr string, templateDir string, htmlDir string, outDir string) error {
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].Time.After(posts[j].Time)
+	sort.Slice(allPosts, func(i, j int) bool {
+		return allPosts[i].Time.After(allPosts[j].Time)
 	})
 
-	sort.Slice(tags, func(i, j int) bool {
-		return tags[i].Count > tags[j].Count
+	sort.Slice(allTags, func(i, j int) bool {
+		return allTags[i].Count > allTags[j].Count
 	})
 
 	tem, err := template.ParseFiles(path.Join(templateDir, "base.html"),
@@ -75,7 +75,7 @@ func Generate(title string, des string, addr string, templateDir string, htmlDir
 	err = generateList(title, des, addr, tem, path.Join(outDir, "index.html"), Tag{ID: -1})
 	es := errutil.NewErrorStack(err)
 
-	for _, tag := range tags {
+	for _, tag := range allTags {
 		err = generateList(title, des, addr, tem, path.Join(outDir, fmt.Sprintf("tag%d.html", tag.ID)), tag)
 		es.Push(err)
 	}
@@ -90,7 +90,7 @@ func Generate(title string, des string, addr string, templateDir string, htmlDir
 		return err
 	}
 
-	for _, post := range posts {
+	for _, post := range allPosts {
 		err = generateSingle(title, des, addr, tem, outDir, htmlDir, post)
 		es.Push(err)
 	}
@@ -102,18 +102,18 @@ func generateList(title string, des string, addr string, tem *template.Template,
 		Title:       title,
 		Description: des,
 		Addr:        addr,
-		Tags:        tags,
+		Tags:        allTags,
 		InList:      true,
 		IsFiltered:  filteredTag.ID != -1,
 		FilteredTag: filteredTag,
 	}
 
 	if !templateBase.IsFiltered {
-		templateBase.Posts = posts
+		templateBase.Posts = allPosts
 	} else {
 
 		psts := make([]Post, 0)
-		for _, pst := range posts {
+		for _, pst := range allPosts {
 			for _, t := range pst.Tags {
 				if filteredTag.ID == t.ID {
 					psts = append(psts, pst)
@@ -144,13 +144,13 @@ func generateSingle(title string, des string, addr string, tem *template.Templat
 		Title:       title,
 		Description: des,
 		Addr:        addr,
-		Tags:        tags,
+		Tags:        allTags,
 		Post:        post,
 		InSingle:    true,
 		HTML:        template.HTML(html),
 	}
 	rel := make([]Post, 0)
-	for _, pst := range posts {
+	for _, pst := range allPosts {
 	Loop:
 		for _, t1 := range pst.Tags {
 			for _, t2 := range post.Tags {
@@ -213,7 +213,7 @@ func ParseMD(filename string, hashDir string, htmlDir string) error {
 		ts = append(ts, tag)
 	}
 	post.Tags = ts
-	posts = append(posts, post)
+	allPosts = append(allPosts, post)
 
 	if isHashed(aid, mdString, hashDir) {
 		return nil
@@ -256,17 +256,17 @@ func parseTag(src []string) error {
 	}
 	for _, str := range src {
 		new := true
-		for i, tag := range tags {
+		for i, tag := range allTags {
 			if tag.Name == strings.TrimSpace(str) {
 				new = false
-				tags[i].Count++
+				allTags[i].Count++
 				break
 			}
 		}
 		if new {
-			tags = append(tags, Tag{
+			allTags = append(allTags, Tag{
 				Name:  strings.TrimSpace(str),
-				ID:    len(tags) + 1,
+				ID:    len(allTags) + 1,
 				Count: 1,
 			})
 		}
@@ -329,7 +329,7 @@ func writeHTML(aid string, md string, htmlDir string) error {
 
 // findTag returns tag.
 func findTag(tag string) (Tag, error) {
-	for _, t := range tags {
+	for _, t := range allTags {
 		if t.Name == tag {
 			return t, nil
 		}
