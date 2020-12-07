@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -59,6 +60,15 @@ type Tag struct {
 
 // Generate generates static files.
 func Generate(title string, des string, addr string, templateDir string, htmlDir string, outDir string) error {
+	err := filepath.Walk(outDir, func(path string, info os.FileInfo, err error) error {
+		if strings.HasSuffix(path, ".html") {
+			return os.Remove(path)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 	sort.Slice(allPosts, func(i, j int) bool {
 		return allPosts[i].Time.After(allPosts[j].Time)
 	})
