@@ -48,5 +48,5 @@ blogen
 Now directory **out/** is static site.
 
 # Example
-[example site](https://wirekang.github.io/blogen/example/out)
+[example site](https://wirekang.github.io/blogen/example/out)  
 [my blog](https://wirekang.github.io)
