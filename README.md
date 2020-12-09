@@ -1,3 +1,8 @@
+# Install
+```
+go install github.com/wirekang/blogen
+```
+
 # Usage
 
 ## Init
@@ -43,4 +48,5 @@ blogen
 Now directory **out/** is static site.
 
 # Example
-[https://wirekang.github.io/blogen/example/out](https://wirekang.github.io/blogen/example/out)
+[example site](https://wirekang.github.io/blogen/example/out)
+[my blog](https://wirekang.github.io)
