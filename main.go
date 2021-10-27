@@ -53,7 +53,7 @@ func main() {
 			fmt.Printf("Can't clear cache: %s", err)
 			os.Exit(1)
 		}
-		err = os.Mkdir(fl.HashDir(), 0755)
+		err = os.Mkdir(fl.HashDir(), 0o755)
 		errutil.Print(err)
 		fmt.Println("Chache cleared.")
 		os.Exit(0)
@@ -80,6 +80,7 @@ func main() {
 		os.Exit(1)
 	}
 	for _, md := range mds {
+		md = filepath.ToSlash(md)
 		fmt.Printf("%s... ", md)
 		err = gen.ParseMD(md, fl.HashDir(), fl.HTMLDir())
 		if err != nil {
