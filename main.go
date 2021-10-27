@@ -27,13 +27,13 @@ func main() {
 			os.Exit(1)
 		}
 	}
+	err := fl.MakeDirs()
+	if err != nil {
+		fmt.Printf("Can't make dirs: %s", err)
+		os.Exit(1)
+	}
 
 	if *init {
-		err := fl.MakeDirs()
-		if err != nil {
-			fmt.Printf("Can't make dirs: %s", err)
-			os.Exit(1)
-		}
 		err = fl.CreateExampleFiles()
 		if err != nil {
 			fmt.Printf("Can't create files: %s", err)

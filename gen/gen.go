@@ -17,7 +17,6 @@ import (
 	"github.com/gomarkdown/markdown"
 	"github.com/wirekang/cfg"
 	"github.com/wirekang/errutil"
-	"github.com/wirekang/fileutil"
 )
 
 var (
@@ -309,7 +308,8 @@ func parseTag(src []string) error {
 // // isHashed returns true if hash of md is already stored.
 func isHashed(aid, md string, hashDir string) bool {
 	hashFile := path.Join(hashDir, aid)
-	if !fileutil.IsExist(hashFile) {
+	_, err := os.Stat(hashFile)
+	if err != nil {
 		return false
 	}
 

@@ -42,7 +42,7 @@ var (
 var outDir = newDirectory(root, "out", false)
 
 var (
-	genDir  = newDirectory(root, "gen", false)
+	genDir  = newDirectory(root, "blogen-cache", false)
 	hashDir = newDirectory(genDir, "hash", false)
 	htmlDir = newDirectory(genDir, "html", false)
 )
