@@ -1,6 +1,6 @@
 # Install
 ```
-go get github.com/wirekang/blogen
+go install github.com/wirekang/blogen@latest
 ```
 
 # Usage
