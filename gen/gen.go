@@ -33,12 +33,12 @@ type TemplateBase struct {
 	Posts       []Post
 	Tags        []Tag
 
-	//list
+	// list
 	InList      bool
 	IsFiltered  bool
 	FilteredTag Tag
 
-	//single
+	// single
 	InSingle     bool
 	Post         Post
 	HTML         template.HTML
@@ -59,7 +59,14 @@ type Tag struct {
 }
 
 // Generate generates static files.
-func Generate(title string, des string, addr string, templateDir string, htmlDir string, outDir string) error {
+func Generate(
+	title string,
+	des string,
+	addr string,
+	templateDir string,
+	htmlDir string,
+	outDir string,
+) error {
 	err := filepath.Walk(outDir, func(path string, info os.FileInfo, err error) error {
 		if strings.HasSuffix(path, ".html") {
 			return os.Remove(path)
@@ -107,7 +114,14 @@ func Generate(title string, des string, addr string, templateDir string, htmlDir
 	return es.First()
 }
 
-func generateList(title string, des string, addr string, tem *template.Template, file string, filteredTag Tag) error {
+func generateList(
+	title string,
+	des string,
+	addr string,
+	tem *template.Template,
+	file string,
+	filteredTag Tag,
+) error {
 	templateBase := TemplateBase{
 		Title:       title,
 		Description: des,
@@ -140,7 +154,15 @@ func generateList(title string, des string, addr string, tem *template.Template,
 	return tem.Execute(wr, templateBase)
 }
 
-func generateSingle(title string, des string, addr string, tem *template.Template, outDir string, htmlDir string, post Post) error {
+func generateSingle(
+	title string,
+	des string,
+	addr string,
+	tem *template.Template,
+	outDir string,
+	htmlDir string,
+	post Post,
+) error {
 	wr, err := os.Create(path.Join(outDir, fmt.Sprintf("%s.html", post.ID)))
 	if err != nil {
 		return err
@@ -319,7 +341,7 @@ func writeHash(aid string, md string, hashDir string) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(hashFile, hash, 0755)
+	err = ioutil.WriteFile(hashFile, hash, 0o755)
 	return err
 }
 
@@ -333,7 +355,7 @@ func getHash(str string) ([]byte, error) {
 // writeHTML writes html file to htmlDir.
 func writeHTML(aid string, md string, htmlDir string) error {
 	file := path.Join(htmlDir, aid)
-	err := ioutil.WriteFile(file, markdown.ToHTML([]byte(md), nil, nil), 0755)
+	err := ioutil.WriteFile(file, markdown.ToHTML([]byte(md), nil, nil), 0o755)
 	return err
 }
 

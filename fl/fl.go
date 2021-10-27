@@ -1,4 +1,4 @@
-//Package fl handle files.
+// Package fl handle files.
 package fl
 
 import (
@@ -18,26 +18,34 @@ type file struct {
 	example string
 }
 
-var dirs = make([]directory, 0)
-var files = make([]file, 0)
+var (
+	dirs  = make([]directory, 0)
+	files = make([]file, 0)
+)
 
-var root = directory{"", false}
-var configFile = newFile(root, "blogen.cfg",
-	"title= Title of blog\ndescription= Description\naddr= //example.com")
+var (
+	root       = directory{"", false}
+	configFile = newFile(root, "blogen.cfg",
+		"title= Title of blog\ndescription= Description\naddr= //example.com")
+)
 
 var mdDir = newDirectory(root, "md", true)
 
-var templateDir = newDirectory(root, "template", true)
-var baseFile = newFile(templateDir, "base.html", " ")
-var listFile = newFile(templateDir, "list.html", " ")
-var singleFile = newFile(templateDir, "single.html", "")
-var styleFile = newFile(templateDir, "style.css", "h1 {\n\n}")
+var (
+	templateDir = newDirectory(root, "template", true)
+	baseFile    = newFile(templateDir, "base.html", " ")
+	listFile    = newFile(templateDir, "list.html", " ")
+	singleFile  = newFile(templateDir, "single.html", "")
+	styleFile   = newFile(templateDir, "style.css", "h1 {\n\n}")
+)
 
 var outDir = newDirectory(root, "out", false)
 
-var genDir = newDirectory(root, "gen", false)
-var hashDir = newDirectory(genDir, "hash", false)
-var htmlDir = newDirectory(genDir, "html", false)
+var (
+	genDir  = newDirectory(root, "gen", false)
+	hashDir = newDirectory(genDir, "hash", false)
+	htmlDir = newDirectory(genDir, "html", false)
+)
 
 func newDirectory(parent directory, name string, isNecessary bool) directory {
 	d := directory{

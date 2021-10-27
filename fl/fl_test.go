@@ -6,7 +6,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	os.Mkdir("tmp", 0755)
+	os.Mkdir("tmp", 0o755)
 	os.Chdir("tmp")
 	if IsNecessaryDirsExist() {
 		t.FailNow()
